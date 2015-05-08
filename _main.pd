@@ -1,0 +1,44 @@
+#N canvas 947 270 550 375 10;
+#X declare -path ./SyncJams/pure-data;
+#X obj 330 10 declare -path ./SyncJams/pure-data;
+#X obj 13 98 syncjams \$0/sync \, namespace my-drum-circle;
+#X obj 19 289 hsl 128 15 0 127 0 0 /myslider/1 /myslider/1/r /myslider/1
+-2 -8 0 10 -262144 -1 -1 7100 0;
+#X obj 19 323 hsl 128 15 0 127 0 0 /myslider/2 /myslider/2/r /myslider/2
+-2 -8 0 10 -262144 -1 -1 6300 1;
+#X obj 16 345 tgl 15 0 /mytoggle/1 /mytoggle/1/r /mytoggle/1 17 7 0
+10 -262144 -1 -1 0 1;
+#X obj 180 289 syncjams-gui-connector \$0/sync /myslider/1 /myslider/1/r
+;
+#X obj 13 142 route tick;
+#X floatatom 13 164 5 0 0 0 - - -, f 5;
+#X text 54 163 <- here is the metronome/clock/tick to use to drive
+a synth, f 36;
+#X obj 13 120 syncjams-state /BPM;
+#X floatatom 124 142 5 0 0 0 - - -, f 5;
+#X text 160 141 <- network specified BPM;
+#X text 10 248 User interface elements synched to all patches on the
+network:, f 63;
+#X msg 398 173 set-state /BPM \$1;
+#X floatatom 398 152 5 30 300 0 - bpm-r -, f 5;
+#X obj 398 195 s \$0/sync;
+#X text 396 133 change the BPM;
+#N canvas 2 50 450 300 init 0;
+#X obj 18 15 loadbang;
+#X msg 18 37 \; bpm-r set 180;
+#X connect 0 0 1 0;
+#X restore 475 259 pd init;
+#X obj 180 311 syncjams-gui-connector \$0/sync /myslider/2 /myslider/2/r
+;
+#X obj 180 333 syncjams-gui-connector \$0/sync /mytoggle/1 /mytoggle/1/r
+;
+#X text 11 46 Simply instantiating the SyncJams instance like this
+on multiple devices will make it sync with other instances on the same
+LAN with the same 'namespace':;
+#X text 275 99 <- all "my-drum-circle" SyncJams will sync.;
+#X connect 1 0 9 0;
+#X connect 6 0 7 0;
+#X connect 9 0 6 0;
+#X connect 9 1 10 0;
+#X connect 13 0 15 0;
+#X connect 14 0 13 0;
