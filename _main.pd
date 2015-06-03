@@ -1,55 +1,57 @@
-#N canvas 868 251 550 405 10;
+#N canvas 417 1191 770 513 10;
 #X declare -path ./SyncJams/pure-data;
 #X obj 13 52 syncjams \$0/sync \, namespace my-drum-circle;
-#X obj 19 308 hsl 128 32 0 127 0 0 /myslider/1 /myslider/1/r /myslider/1
+#X obj 19 408 hsl 128 32 0 127 0 0 /myslider/1 /myslider/1/r /myslider/1
 -2 -8 0 10 -262144 -1 -1 0 0;
-#X obj 19 356 hsl 128 32 0 127 0 0 /myslider/2 /myslider/2/r /myslider/2
+#X obj 19 456 hsl 128 32 0 127 0 0 /myslider/2 /myslider/2/r /myslider/2
 -2 -8 0 10 -262144 -1 -1 0 1;
-#X obj 156 308 tgl 32 0 /mytoggle/1 /mytoggle/1/r /mytoggle/1 38 7
+#X obj 156 408 tgl 32 0 /mytoggle/1 /mytoggle/1/r /mytoggle/1 38 7
 0 10 -262144 -1 -1 0 1;
-#X obj 200 331 syncjams-gui-connector \$0/sync /myslider/1 /myslider/1/r
+#X obj 330 431 syncjams-gui-connector \$0/sync /myslider/1 /myslider/1/r
 ;
-#X text 60 139 <- here is the metronome/clock/tick to use to drive
+#X text 60 219 <- here is the metronome/clock/tick to use to drive
 a synth, f 36;
-#X obj 13 74 syncjams-state /BPM;
-#X text 10 277 User interface elements synched to all patches on the
+#X text 10 377 User interface elements synched to all patches on the
 network:, f 63;
-#X msg 402 172 set-state /BPM \$1;
-#X floatatom 402 151 5 30 300 0 - bpm-r -, f 5;
-#X obj 402 194 s \$0/sync;
-#N canvas 278 222 450 300 init 0;
+#X obj 459 178 s \$0/sync;
+#N canvas 1172 256 459 82 init 0;
 #X obj 18 15 loadbang;
-#X msg 18 37 \; bpm-r set 180;
-#X obj 17 103 r /myslider/1/r;
-#X obj 17 125 print GOT /myslider/1/r;
-#X obj 17 153 r /myslider/2/r;
-#X obj 17 175 print GOT /myslider/2/r;
-#X obj 17 203 r /mytoggle/1/r;
-#X obj 17 225 print GOT /mytoggle/2/r;
-#X obj 223 103 r bpm-r;
-#X obj 223 125 print BPM/r;
-#X obj 18 71 print loaded;
+#X obj 18 36 print loaded;
 #X obj 228 13 declare -path ./SyncJams/pure-data;
-#X obj 231 203 r node-id;
-#X obj 231 225 print node-id;
 #X connect 0 0 1 0;
-#X connect 1 0 10 0;
-#X connect 2 0 3 0;
-#X connect 4 0 5 0;
-#X connect 6 0 7 0;
-#X connect 8 0 9 0;
-#X connect 12 0 13 0;
-#X restore 490 14 pd init;
+#X restore 713 7 pd init;
 #X text 11 6 Simply instantiating the SyncJams instance like this on
 multiple devices will make it sync with other instances on the same
 LAN with the same 'namespace':;
 #X text 275 53 <- all "my-drum-circle" SyncJams will sync.;
-#X text 399 116 Send a BPM change to the network, f 18;
-#X obj 13 145 s tick;
-#X obj 90 213 s node-id;
-#X obj 13 117 route tick;
-#X obj 90 169 route node-id;
-#N canvas 0 50 219 180 get 0;
+#X text 627 215 Send a BPM change to the network, f 18;
+#X obj 13 225 s tick;
+#X obj 90 293 s node-id;
+#X obj 13 197 route tick;
+#X obj 90 249 route node-id;
+#X obj 330 453 syncjams-gui-connector \$0/sync /myslider/2 /myslider/2/r
+;
+#X obj 330 475 syncjams-gui-connector \$0/sync /mytoggle/1 /mytoggle/1/r
+;
+#X obj 13 249 nbx 5 32 0 1e+37 0 1 empty tick empty 0 -8 0 10 -262144
+-1 -1 1149 256;
+#X text 282 334 <- unique id for this node;
+#X floatatom 148 116 5 0 0 0 - mystate -, f 5;
+#X obj 156 293 syncjams-id-symbol;
+#X symbolatom 156 336 20 0 0 0 - node-id-symbol -, f 20;
+#X obj 90 271 t f f;
+#X obj 156 315 s node-id-symbol;
+#X obj 630 248 nbx 3 32 30 300 0 1 /BPM /BPM/r empty 0 -8 0 10 -262144
+-1 -1 180 256;
+#X obj 414 409 syncjams-gui-connector \$0/sync /BPM /BPM/r;
+#X msg 459 156 set-state /mystate \$1;
+#X obj 13 74 syncjams-state /mystate;
+#X obj 148 95 s mystate;
+#X floatatom 459 117 5 0 0 0 - - set-mystate, f 5;
+#X obj 459 135 r set-mystate;
+#X text 184 115 <- "/mystate" from the network. send here ->;
+#X obj 540 350 s \$0/sync;
+#N canvas 2 76 219 180 get 0;
 #X obj 53 107 outlet;
 #X msg 53 75 get-node-id;
 #X obj 53 26 loadbang;
@@ -57,30 +59,60 @@ LAN with the same 'namespace':;
 #X connect 1 0 0 0;
 #X connect 2 0 3 0;
 #X connect 3 0 1 0;
-#X restore 376 92 pd get node-id after 1s;
-#X obj 124 95 s bpm;
-#X obj 200 353 syncjams-gui-connector \$0/sync /myslider/2 /myslider/2/r
-;
-#X obj 200 375 syncjams-gui-connector \$0/sync /mytoggle/1 /mytoggle/1/r
-;
-#X obj 13 169 nbx 5 32 0 1e+37 0 1 empty tick empty 0 -8 0 10 -262144
--1 -1 783 256;
-#X text 282 254 <- unique id for this node;
-#X floatatom 124 116 5 0 0 0 - bpm -, f 5;
-#X text 160 115 <- network specified BPM;
-#X obj 156 213 syncjams-id-symbol;
-#X symbolatom 156 256 20 0 0 0 - node-id-symbol -, f 20;
-#X obj 90 191 t f f;
-#X obj 156 235 s node-id-symbol;
-#X connect 0 0 6 0;
-#X connect 6 0 17 0;
-#X connect 6 1 20 0;
-#X connect 8 0 10 0;
-#X connect 9 0 8 0;
-#X connect 17 0 15 0;
-#X connect 17 1 18 0;
-#X connect 18 0 29 0;
-#X connect 19 0 10 0;
-#X connect 27 0 30 0;
-#X connect 29 0 16 0;
-#X connect 29 1 27 0;
+#X restore 540 328 pd get node-id again after 1s;
+#N canvas 2 50 450 300 print 0;
+#X obj 21 22 r /myslider/1/r;
+#X obj 21 44 print GOT /myslider/1/r;
+#X obj 21 72 r /myslider/2/r;
+#X obj 21 94 print GOT /myslider/2/r;
+#X obj 21 122 r /mytoggle/1/r;
+#X obj 21 144 print GOT /mytoggle/2/r;
+#X obj 235 122 r node-id;
+#X obj 227 44 print GOT BPM/r;
+#X obj 235 144 print GOT node-id;
+#X obj 227 22 r /BPM/r;
+#X connect 0 0 1 0;
+#X connect 2 0 3 0;
+#X connect 4 0 5 0;
+#X connect 6 0 8 0;
+#X connect 9 0 7 0;
+#X restore 707 29 pd print;
+#N canvas 649 1479 450 300 metronome 0;
+#X obj 26 23 r tick;
+#X obj 26 45 mod 4;
+#X obj 26 139 + 60;
+#X obj 26 161 mtof;
+#X obj 26 183 osc~;
+#X obj 26 205 *~;
+#X msg 92 117 1 \, 0 50;
+#X obj 26 227 dac~;
+#X obj 59 183 line~;
+#X obj 26 117 pow 2 \, 32;
+#X obj 26 67 sel 1;
+#X obj 53 88 t f b;
+#X connect 0 0 1 0;
+#X connect 1 0 10 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 5 0 7 0;
+#X connect 5 0 7 1;
+#X connect 6 0 8 0;
+#X connect 8 0 5 1;
+#X connect 9 0 2 0;
+#X connect 10 1 11 0;
+#X connect 11 0 9 0;
+#X connect 11 1 6 0;
+#X restore 15 346 pd metronome;
+#X connect 0 0 28 0;
+#X connect 14 0 12 0;
+#X connect 14 1 15 0;
+#X connect 15 0 23 0;
+#X connect 21 0 24 0;
+#X connect 23 0 13 0;
+#X connect 23 1 21 0;
+#X connect 27 0 7 0;
+#X connect 28 0 14 0;
+#X connect 28 1 29 0;
+#X connect 31 0 27 0;
+#X connect 34 0 33 0;
